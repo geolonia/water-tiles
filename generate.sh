@@ -6,8 +6,8 @@ if [[ ! -d ./tmp ]]; then mkdir ./tmp; fi
 #### Download data if not exists #####
 if [[ ! -d ./tmp/water-polygons-split-4326 ]]; then
   echo "Downloading newest water polygons..."
-  curl "https://osmdata.openstreetmap.de/download/water-polygons-split-4326.zip" > water-polygons-split-4326.zip
-  unzip water-polygons-split-4326.zip
+  curl "https://osmdata.openstreetmap.de/download/water-polygons-split-4326.zip" > ./tmp/water-polygons-split-4326.zip
+  unzip ./tmp/water-polygons-split-4326.zip -d './tmp/'
 else
   echo "Water polygons already exist."
 fi
@@ -22,7 +22,7 @@ fi
 if [[ ! -f ./build/water.mbtiles ]]; then
   echo "Building tiles with tippecanoe..."
   tippecanoe \
-    -zg \
+    -z14 \
     -o ./build/water.mbtiles \
     --name="water" \
     --attribution="<a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap</a>" \
@@ -31,7 +31,6 @@ if [[ ! -f ./build/water.mbtiles ]]; then
     --coalesce \
     --exclude-all \
     --coalesce-densest-as-needed \
-    --extend-zooms-if-still-dropping \
     -l water \
     -P ./tmp/water_polygons.geojsons
 else
